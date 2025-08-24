@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mini Social App</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="topbar">
+    <h1>Mini Social</h1>
+    <div class="nav">
+      {% if session.username %}
+        <span class="user">Hello, {{ session.username }}</span>
+        <a href="/profile">My Profile</a>
+        <a href="/logout">Logout</a>
+      {% else %}
+        <a href="/login">Login</a>
+        <a href="/signup">Signup</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="container">
+    {% if session.username %}
+      <div class="create-post card">
+        <form action="/post" method="POST" enctype="multipart/form-data">
+          <textarea name="content" placeholder="Write something..." rows="3"></textarea><br>
+          <input type="file" name="file"><br>
+          <button type="submit">Post</button>
+        </form>
+      </div>
+    {% else %}
+      <div class="card">
+        <p>Please <a href="/login">login</a> to post.</p>
+      </div>
+    {% endif %}
+
+    <h2 class="feed-title">Public Feed</h2>
+
+    {% for post in posts %}
+      <div class="post card">
+        <p class="post-user"><b>{{ post[1] }}</b></p>
+        <p class="post-content">{{ post[2] }}</p>
+
+        {% if post[3] %}
+          {% if post[3].endswith(".mp4") %}
+            <video class="media" controls onclick="window.location='/view/{{ post[0] }}'">
+              <source src="/static/uploads/{{ post[3] }}" type="video/mp4">
+            </video>
+          {% else %}
+            <img class="media" src="/static/uploads/{{ post[3] }}" onclick="window.location='/view/{{ post[0] }}'">
+          {% endif %}
+        {% endif %}
+
+        <div class="post-actions">
+          <a href="/like/{{ post[0] }}">❤️ Like</a> <span>({{ post[4] }})</span>
+          &nbsp;•&nbsp;
+          <span>👁 {{ post[5] }} views</span>
+        </div>
+
+        <div class="comment-box">
+          <form action="/comment/{{ post[0] }}" method="POST">
+            <input type="text" name="comment" placeholder="Write comment..." required>
+            <button type="submit">Comment</button>
+          </form>
+        </div>
+
+        <div class="comments-list">
+          <b>Comments:</b>
+          {% for c in comments %}
+            {% if c[1] == post[0] %}
+              <p class="comment"><b>{{ c[2] }}</b>: {{ c[3] }}</p>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

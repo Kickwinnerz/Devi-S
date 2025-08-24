@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ username }}'s Profile</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="topbar">
+    <h1>{{ username }}'s Profile</h1>
+    <div class="nav">
+      <a href="/">Back to Feed</a> | <a href="/logout">Logout</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>My Posts</h2>
+    {% if posts %}
+      {% for post in posts %}
+        <div class="post card">
+          <p class="post-content">{{ post[1] }}</p>
+          {% if post[2] %}
+            {% if post[2].endswith(".mp4") %}
+              <video class="media" controls>
+                <source src="/static/uploads/{{ post[2] }}" type="video/mp4">
+              </video>
+            {% else %}
+              <img class="media" src="/static/uploads/{{ post[2] }}">
+            {% endif %}
+          {% endif %}
+          <div class="post-actions">
+            <span>❤️ {{ post[3] }}</span> • <span>👁 {{ post[4] }} views</span>
+          </div>
+          <div class="post-manage">
+            <a href="/edit/{{ post[0] }}">✏ Edit</a> |
+            <a href="/delete/{{ post[0] }}" onclick="return confirm('Delete this post?');">🗑 Delete</a>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No posts yet.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

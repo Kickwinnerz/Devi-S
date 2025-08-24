@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Edit Post</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="auth-container card">
+    <h2>Edit Post</h2>
+    <form method="POST">
+      <textarea name="content" rows="4">{{ post[0] }}</textarea><br>
+      <button type="submit">Update</button>
+    </form>
+    <p><a href="/profile">Back to Profile</a></p>
+  </div>
+</body>
+</html>
